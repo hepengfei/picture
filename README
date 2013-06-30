@@ -15,6 +15,7 @@ Picture
    CLOSED: [2013-06-30 日 11:38]
 ** TODO 实现接口
    - [X] 完成了web.py框架及api代码框架的搭建
+   - [X] 完成了pic/file的增删查接口
 ** TODO 完成简单的展示页面
 ** TODO 完成采集功能
 
