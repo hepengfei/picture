@@ -52,11 +52,12 @@ function test_picfile()
 
 function runall()
 {
-    for file in `ls *.png`;
+    curdir=`dirname $0`
+    for file in `ls $curdir/*.png`;
     do
         echo ">> running at $file <<"
         picid=`basename $file | cut -d. -f1`
-        test_picfile $picid `dirname $0`/$file
+        test_picfile $picid $file
     done
 }
 
