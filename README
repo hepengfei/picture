@@ -29,8 +29,8 @@ X_APP: key,passwd
 <picture data>
 ------
 HTTP/1.1 200 OK
+X_PICID: <picid>
 
-{code: 0; picid: '<picid>'}
 #+EXAMPLE_END
 #+EXAMPLE_BEGIN
 POST /pic/info/<picid>
@@ -39,8 +39,8 @@ X_APP: key,passwd
 {height: 123; width: 456; ...}
 ------
 HTTP/1.1 200 OK
+X_PICID: <picid>
 
-{code: 0; picid: '<picid>'}
 #+EXAMPLE_END
 
 ** 获取
@@ -58,8 +58,8 @@ X_APP: key,passwd
 
 ------
 HTTP/1.1 200 OK
+X_PICID: <picid>
 
-{code: 0; picid: '<picid>'}
 #+EXAMPLE_END
 
 
