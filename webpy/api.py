@@ -21,11 +21,11 @@ class PicFile:
         setpicid(web.ctx, id)
         ret, n_affected = model.picfile_new(id, data)
         if ret != 0:
-            web.ctx.status=500
+            web.ctx.status="500"
         elif n_affected == 1:
-            web.ctx.status=201
+            web.ctx.status="201"
         else:
-            web.ctx.status=200
+            web.ctx.status="200"
         return ''
     def GET(self, id):
         appkey, apppasswd = utils.getappinfo(web.ctx)
@@ -33,10 +33,10 @@ class PicFile:
         ret, data=model.picfile_get(id)
         if ret == 0:
             if len(data) == 0:
-                web.ctx.status = 404
+                web.ctx.status = "404"
             return data
         else:
-            web.ctx.status = 500
+            web.ctx.status = "500"
             return ''
     def DELETE(self, id):
         appkey, apppasswd = utils.getappinfo(web.ctx)
@@ -44,9 +44,9 @@ class PicFile:
         ret, n_affected=model.picfile_delete(id)
         if ret == 0:
             if n_affected == 0:
-                web.ctx.status = 404
+                web.ctx.status = "404"
         else:
-            web.ctx.status = 500
+            web.ctx.status = "500"
         return ''
     
 class PicInfo:
