@@ -1,0 +1,11 @@
+worker:wsgi
+libraries:
+- name: webpy
+  version: "0.36"
+handlers:
+- url: /static/
+  static_path: static
+- url: /robots.txt
+  static_path: robots.txt
+- url: /favicon.ico
+  static_path: favicon.ico

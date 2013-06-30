@@ -13,6 +13,8 @@ Picture
    CLOSED: [2013-06-30 日 10:58]
 ** DONE 完成API接口
    CLOSED: [2013-06-30 日 11:38]
+** TODO 实现接口
+   - [X] 完成了web.py框架及api代码框架的搭建
 ** TODO 完成简单的展示页面
 ** TODO 完成采集功能
 
@@ -43,7 +45,7 @@ HTTP/1.1 200 OK
 
 ** 获取
 - 获取单个文件或信息： GET /pic/file/<picid>.png /pic/[info|exif]/<picid> ...
-- 获取信息列表： GET /pic/list/info/<offset>/<number>  /pic/list/[info|exif]/<picid>/<picid>...
+- 获取信息列表： GET /pic/info/list/<offset>/<number>  /pic/[info|exif]/list/<picid>/<picid>...
 
 ** 删除
 - 图片文件： /pic/file/<picid>.png
