@@ -6,16 +6,24 @@ use picture;
 
 create table pic
 (
-    picid bigint unsigned not null default 0,
+    picid char(32) not null,
     picheight int unsigned not null default 0,
     picwidth int unsigned not null default 0,
     picsize bigint unsigned not null default 0,
+    pictype char(32) not null,
     sourceurl text not null default '',
     sourcesite text not null default '',
     tagid text not null default '',
+    bywho char(32) not null,
     datesubmit datetime not null,
-    bywho bigint unsigned not null default 0,
-    picdata mediumblob not null default '',
+
+    primary key (picid)
+);
+
+create table picfile
+(
+    picid char(32) not null,
+    picdata mediumblob not null,
 
     primary key (picid)
 );
@@ -23,7 +31,7 @@ create table pic
 
 create table tag
 (
-    tagid int unsigned not null default 0,
+    tagid char(32) not null,
     tagname varchar(64) not null,
     picnumber bigint unsigned not null default 0,
 
@@ -33,8 +41,8 @@ create table tag
 
 create table app
 (
-    appkey bigint unsigned not null default 0,
-    apppasswd char(64) not null default 0,
+    appkey char(32) not null,
+    apppasswd char(64) not null,
     appname varchar(64) not null,
     appdesc text not null,
 
@@ -43,7 +51,7 @@ create table app
 
 create table picexif
 (
-    picid bigint unsigned not null default 0,
+    picid char(32) not null,
     picexif text not null,
 
     primary key (picid)
