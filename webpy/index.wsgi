@@ -7,6 +7,7 @@ if using_sae:
     import sae
 
 import web
+web.DEBUG=False
 
 import api
 
