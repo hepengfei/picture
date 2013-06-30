@@ -16,3 +16,4 @@ def getappinfo(ctx):
     if len(val) < 2:
         val = val + ['','']
     return val[0:2]
+

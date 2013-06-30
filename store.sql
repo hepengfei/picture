@@ -1,16 +1,16 @@
 -- 存储表设计
 
 drop database if exists picture;
-create database picture;
+create database picture character set = utf8 collate = utf8_bin;
 use picture;
 
-create table pic
+create table picinfo
 (
     picid char(32) not null,
-    picheight int unsigned not null default 0,
     picwidth int unsigned not null default 0,
-    picsize bigint unsigned not null default 0,
-    pictype char(32) not null,
+    picheight int unsigned not null default 0,
+    picbytes bigint unsigned not null default 0,
+    picfiletype char(32) not null,
     sourceurl text not null default '',
     sourcesite text not null default '',
     tagid text not null default '',
