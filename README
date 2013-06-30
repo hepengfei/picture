@@ -9,7 +9,134 @@ Picture
 - 展示
 
 * 待办事项
-** TODO 完成网站存储布局
-** TODO 完成API接口
+** DONE 完成网站存储布局
+   CLOSED: [2013-06-30 日 10:58]
+** DONE 完成API接口
+   CLOSED: [2013-06-30 日 11:38]
 ** TODO 完成简单的展示页面
 ** TODO 完成采集功能
+
+* API接口
+** 新增
+- 文件： POST /pic/file/new
+- 信息： POST /pic/[info|exif]/<picid>
+#+EXAMPLE_BEGIN
+POST /pic/file/new
+X_APP: key,passwd
+
+<picture data>
+------
+HTTP/1.1 200 OK
+
+{code: 0; picid: '<picid>'}
+#+EXAMPLE_END
+#+EXAMPLE_BEGIN
+POST /pic/info/<picid>
+X_APP: key,passwd
+
+{height: 123; width: 456; ...}
+------
+HTTP/1.1 200 OK
+
+{code: 0; picid: '<picid>'}
+#+EXAMPLE_END
+
+** 获取
+- 获取单个文件或信息： GET /pic/file/<picid>.png /pic/[info|exif]/<picid> ...
+- 获取信息列表： GET /pic/list/info/<offset>/<number>  /pic/list/[info|exif]/<picid>/<picid>...
+
+** 删除
+- 图片文件： /pic/file/<picid>.png
+- 基本信息： /pic/info/<picid>
+- Exif信息： /pic/exif/<picid>
+
+#+EXAMPLE_BEGIN
+DELETE /pic/file/<picid>.png
+X_APP: key,passwd
+
+------
+HTTP/1.1 200 OK
+
+{code: 0; picid: '<picid>'}
+#+EXAMPLE_END
+
+
+
+
+* 参考
+
+** http://www.cnblogs.com/shanyou/archive/2012/05/12/2496959.html
+
+HTTP Method 与 CURD 数据处理操作对应
+
+HTTP方法
+
+数据处理
+
+说明
+
+POST
+
+Create
+
+新增一个没有id的资源
+
+GET
+
+Read
+
+取得一个资源
+
+PUT
+
+Update
+
+更新一个资源。或新增一个含 id 资源(如果 id 不存在)
+
+DELETE
+
+Delete
+
+删除一个资源
+
+RESTFUL WEB SERVICE
+
+RESTful Web Service (又称 RESTful Web API) 是一个使用 HTTP 并符合 REST 原则的 Web 服务。我们知道，通过 URL 可以传送 GET 请求，在 表单指定 method="GET|POST" 来送出请求。但我们要处理 PUT 或 DELETE 的请求呢？通过 RESTful 我们可以简单 URI 来定义资源并和 HTTP 方法配合使用。
+
+Resource 与 HTTP 方法的对应
+
+资源
+
+资源说明
+
+GET
+
+PUT
+
+POST
+
+DELETE
+
+http://www.cnblogs.com/Products/
+
+Products是一组资源集合
+
+列出 该组资源集合中每个资源的详细信息
+
+更新 当前整组资源
+
+新增 或附加一个新资源。该操作传回新资源的URL
+
+删除 整组资源
+
+http://www.cnblogs.com/Products/1
+
+Products/1是单个资源
+
+取得 指定的资源的详细信息
+
+更新 或新增指定的资源
+
+新增 或附加一个新元素
+
+删除 指定的元素
