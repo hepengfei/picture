@@ -2,31 +2,30 @@
 cat_list="22 23 24 25 26 27 28"
 
 pid_list=""
-NCURR=16
+NCURR=64
+PID_FILE="/tmp/tupian.fm.pids"
 function my_wget()
 {
     wget -q "$1" &
 
-    pid_list="$pid_list $!"
+    echo "$!" >> $PID_FILE
 
     while [ true ]; 
     do
-        new_list=""
-        n=0
-        for pid in $pid_list;
+        > ${PID_FILE}.1
+        cat ${PID_FILE} | while read pid;
         do
             if [ -e /proc/$pid -a /proc/$pid/exe ];
             then
-                # exists
-                n=$((n+1))
-                new_list="$new_list $pid"
+                echo "$pid" >> ${PID_FILE}.1
             fi
         done
-        pid_list="$new_list"
+        mv ${PID_FILE}.1 $PID_FILE
+        n=`wc -l $PID_FILE|cut -d' ' -f1`
         if [ $n -lt $NCURR ]; then
             break
         fi
-        sleep 0.1
+        sleep 1
     done
 }
 
@@ -75,23 +74,31 @@ function fetch_by_cat()
     cat=$1
     paged=$2
 
-    TMP_FILE=tmp-postid-$cat-$paged
-#    while [ $paged -ne 0 ];
-#    do
+    while [ $paged -ne 0 ];
+    do
+        echo ">>> cat= $cat paged= $paged <<<"
+        TMP_FILE=tmp-postid-$cat-$paged
         get_postid_list $cat $paged > $TMP_FILE
-#        ret=`cat $TMP_FILE | is_list_end`
-#        if [ "$ret" == "END" ]; then
-#            paged=0
-#        else
-#            paged=$((paged+1))
-#        fi
+        ret=`cat $TMP_FILE | is_list_end`
+        if [ "$ret" == "END" ]; then
+            paged=0
+        else
+            paged=$((paged+1))
+        fi
 
         cat $TMP_FILE | while read postid; 
         do
+            if [ "$postid" == "0" ]; # 结束标志
+            then
+                break
+            fi
+
             TMP_FILE=tmp-pic-$1-$postid
             get_piclist_info $postid > $TMP_FILE
             
             title=`cat $TMP_FILE | filter_title`
+            n=`cat $TMP_FILE | filter_pic_list | wc -l | cut -d' ' -f1`
+            echo "$title $n"
             cat $TMP_FILE | filter_retina_pic_list | while read url;
             do
                 my_wget "$url"
@@ -101,20 +108,18 @@ function fetch_by_cat()
                 my_wget "$url"
             done
         done
-#    done
+    done
 }
 
 
 function fetchall()
 {
-    for paged in "2 3 4 5 6 7 8";
+    for cat in $cat_list;
     do
-        for cat in $cat_list;
-        do
-            fetch_by_cat $cat $paged
-        done
+        fetch_by_cat $cat 8
     done
 }
 
 
-fetchall
+$1 $2 $3
+halt -p
