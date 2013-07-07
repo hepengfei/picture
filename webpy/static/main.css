@@ -1,0 +1,21 @@
+
+#container
+{
+    margin: auto 0px;
+}
+
+.content
+{
+    margin-left: 20px;
+    display: block;
+}
+
+img
+{
+    width:300px;
+}
+
+nav
+{
+    clear:both;
+}

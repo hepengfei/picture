@@ -3,8 +3,8 @@
 import web, datetime
 import MySQLdb
 
-db = web.database(dbn='mysql', host='192.168.1.103',
-                  db='picture', user='root', passwd='kebing')
+db = web.database(dbn='mysql', host='localhost',
+                  db='picture', user='root', passwd='')
 
 def get_errno(err):
     return int(str(err)[1:10].split(',')[0])
@@ -42,7 +42,8 @@ def picinfo_new(id, info):
                   picwidth=info["picwidth"],
                   picheight=info["picheight"],
                   picbytes=info["picbytes"],
-                  picfiletype=info["picfiletype"],
+                  picformat=info["picformat"],
+                  picname=info["picname"],
                   sourceurl=info["sourceurl"],
                   sourcesite=info["sourcesite"],
                   tagid=info["tagid"],
@@ -68,6 +69,17 @@ def picinfo_get(id):
 def picinfo_list(offset, limit):
     try:
         results = db.select('picinfo', offset=offset, limit=limit)
+    except MySQLdb.Error as err:
+        return get_errno(err), None
+    if len(results) > 0:
+        return 0, results
+    else:
+        return 0, None
+
+def picinfo_list_large(offset, limit):
+    try:
+        results = db.select('picinfo', offset=offset, limit=limit,
+                            where="picheight>400")
     except MySQLdb.Error as err:
         return get_errno(err), None
     if len(results) > 0:

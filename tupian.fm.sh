@@ -121,5 +121,130 @@ function fetchall()
 }
 
 
+APPKEY="me"
+APPPASSWD="aa"
+
+SERVER="benben"
+
+function request()
+{
+    method=$1
+    path=$2
+    file=$3
+   
+    if ! [ -z $file ];
+    then
+        file="-T $file"
+    fi
+    curl -v -X $method http://$SERVER/$path -H "X_APP: $APPKEY,$APPPASSWD" $file 2>&1
+}
+
+function get_result()
+{
+    grep -E '< HTTP|< ETag' |sed 's/\r//g' |gawk '/HTTP/{status=$3;}/ETag/{etag=$3;}END{printf("%d %s\n", status, etag);}'
+}
+
+GET_PIC_INFO="$HOME/Workspace/picture/test/get_pic_info.py"
+function report_file()
+{
+    local picfile=$1
+    local tagname=$2
+    local picname="$3"
+
+    if ! [ -f $picfile ]; then
+        echo "file not exists, skip: $picfile $tagname $picname"
+        return 0
+    fi
+
+    TMPFILE=/tmp/tmp.tupian.fm.report.$$
+
+    request POST "pic/file/new" $picfile > $TMPFILE.http
+    r=`cat $TMPFILE.http | get_result`
+    r_http=`echo "$r"|cut -d' ' -f1`
+    r_etag=`echo "$r"|cut -d' ' -f2`
+    if [ $r_http -ne 201 ] && [ $r_http -ne 200 ]; then
+        echo "upload $infofile failed! > $r|$r_http|$r_etag2"
+        echo "$TMPFILE.http"
+        return 1
+    fi
+    if [ -z $r_etag ]; then
+        echo "upload $infofile etag error! > $r"
+        return 1
+    fi
+
+    $GET_PIC_INFO $picfile $r_etag "$picname" "http://www.tupian.fm/" "tupian.fm" "$tagname" > $TMPFILE
+    request POST "pic/info/$r_etag" $TMPFILE > $TMPFILE.http
+    r=`cat $TMPFILE.http | get_result`
+    r_http=`echo "$r"|cut -d' ' -f1`
+    r_etag2=`echo "$r"|cut -d' ' -f2`
+    if [ $r_http -ne 201 ] && [ $r_http -ne 200 ]; then
+        echo "report $infofile failed! > $r|$r_http|$r_etag2"
+        echo "$TMPFILE.http"
+        cat $TMPFILE.http
+        return 1
+    fi
+    if [ "$r_etag2" != "$r_etag" ]; then
+        echo "report $infofile etag error! > $r $r_etag"
+        return 1
+    fi
+
+    return 0
+}
+
+function filter_filename()
+{
+    gawk -F"/" '{print $NF}'
+}
+
+function report_from_localcache()
+{
+    cache_dir=$1
+    reported_dir=$2
+
+    for infofile in `ls $cache_dir/tmp-pic-*`;
+    do
+        echo $infofile
+        tagname=`basename $infofile | cut -d'-' -f3`
+        picname=`cat $infofile | filter_title`
+
+        mainpic=`head -1 $infofile | filter_filename`
+
+        nline=0
+        if [ -f $infofile ]; then
+            nline=`wc -l $infofile|cut -d' ' -f1`
+        fi
+        if [ $nline -lt 2 ] || [ -z "$picname" ] || [ -z "$mainpic" ];
+        then
+            continue
+        fi
+
+        report_file $cache_dir/$mainpic $tagname "$picname"
+        if [ $? -ne 0 ]; then
+            return $?
+        else
+            echo "reported $picname - $mainpic ok"
+        fi
+        
+
+        n=0
+        tail -n +3 $infofile | while read line;
+        do
+            n=$((n+1))
+            picfile=`echo $line | filter_filename`
+            
+            report_file $cache_dir/$picfile $tagname "$picname-$n"
+            if [ $? -ne 0 ]; then
+                return
+            else
+                echo "reported $picname-$n - $picfile ok"
+            fi
+        done
+
+        mv $infofile $reported_dir/
+
+    done
+}
+
+
 $1 $2 $3
-halt -p
+

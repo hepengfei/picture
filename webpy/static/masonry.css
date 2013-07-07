@@ -1,0 +1,35 @@
+
+body
+{
+    //background-color: black;
+}
+
+#container
+{
+    margin: 0 auto;
+}
+
+.item
+{
+    display:block;
+    margin: 10px;
+    padding: 0px;
+    background-color: white;
+}
+
+.item img
+{
+    width: 270px;
+}
+
+nav
+{
+    margin-top: 30px;
+    text-align: center;
+}
+
+nav a
+{
+    text-decoration: none;
+}
+
