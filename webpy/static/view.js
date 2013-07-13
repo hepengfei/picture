@@ -28,7 +28,7 @@ ret_page=get_cur_page(document.location.href)
 
 if(pic == false)
 {
-    document.location.href="/masonry.html";
+    document.location.href="/";
 }
 else
 {
@@ -43,11 +43,11 @@ else
     }
 
     var a=document.createElement("a");
-    $(a).attr("href", "/masonry.html"+page_str)
+    $(a).attr("href", "/"+page_str)
         .append(img);
 
     $("#imgviewer>div").append(a);
-    $("#prevpage").attr('href', "/masonry.html"+page_str);
+    $("#prevpage").attr('href', "/"+page_str);
 }
 
 

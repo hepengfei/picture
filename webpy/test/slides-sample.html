@@ -1,0 +1,85 @@
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://responsiveslides.com/responsiveslides.min.js"></script>
+
+<style type="text/css">
+
+
+.rslides {
+  position: relative;
+  list-style: none;
+  overflow: hidden;
+  width: 100%;
+  heigth: 100%;
+  padding: 0;
+  margin: 0 auto;
+  }
+
+.rslides li {
+  -webkit-backface-visibility: hidden;
+  position: absolute;
+  display: none;
+  width: 100%;
+  left: 0;
+  top: 0;
+  }
+
+.rslides li:first-child {
+  position: relative;
+  display: block;
+  float: left;
+  }
+
+.rslides img {
+  display: block;
+  height: auto;
+  float: left;
+  max-width: 100%;
+  max-height: 90%;
+  border: 0;
+  width: auto;
+  height: auto;
+  }
+
+</style>
+
+<div style="width:100%;" >
+<ul class="rslides">
+<li><img src="http://benben/pic/file/0f7e1e45e94fce645a6c67d23a1b8c06" alt=""></li>
+<li><img src="http://benben/pic/file/0f9532b594b8249ea59b6a4fd6bdb566" alt=""></li>
+<li><img src="http://benben/pic/file/0f9f3f9be2dafd41222f3ab488759e6f" alt=""></li>
+<li><img src="http://benben/pic/file/0fb8287f250ad2c65b40e1568dab0b47" alt=""></li>
+<li><img src="http://benben/pic/file/0fc5e54218b467f4a49a224e726d36d5" alt=""></li>
+<li><img src="http://benben/pic/file/0fcf974b0e67fffa6ae1bbc421112694" alt=""></li>
+<li><img src="http://benben/pic/file/0fdb42cb45fa2a22f202cb8ceaea29ae" alt=""></li>
+<li><img src="http://benben/pic/file/10069ce8f40de4455bb916ab7c79f1b3" alt=""></li>
+<li><img src="http://benben/pic/file/102433b8790674c3076ca71268fda880" alt=""></li>
+<li><img src="http://benben/pic/file/1038675c5190f3d8cc4295f8d6bb0c37" alt=""></li>
+</ul>
+
+</div>
+
+
+<script type="text/javascript">//<![CDATA[
+
+$(".rslides").responsiveSlides({
+  auto: false,             // Boolean: Animate automatically, true or false
+  speed: 500,            // Integer: Speed of the transition, in milliseconds
+  timeout: 4000,          // Integer: Time between slide transitions, in milliseconds
+  pager: false,           // Boolean: Show pager, true or false
+  nav: true,             // Boolean: Show navigation, true or false
+  random: false,          // Boolean: Randomize the order of the slides, true or false
+  pause: false,           // Boolean: Pause on hover, true or false
+  pauseControls: true,    // Boolean: Pause when hovering controls, true or false
+  prevText: "Previous",   // String: Text for the "previous" button
+  nextText: "Next",       // String: Text for the "next" button
+  maxwidth: "",           // Integer: Max-width of the slideshow, in pixels
+  navContainer: "",       // Selector: Where controls should be appended to, default is after the 'ul'
+  manualControls: "",     // Selector: Declare custom pager navigation
+  namespace: "rslides",   // String: Change the default namespace used
+  before: function(){},   // Function: Before callback
+  after: function(){}     // Function: After callback
+});
+
+            //]]></script>
+
