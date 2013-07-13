@@ -89,6 +89,18 @@ article
     background-color: white;
 }
 
+.item.gigante img
+{
+    width: 50%;
+    height: 50%;
+}
+
+.item:hover
+{
+    border-color: white;
+    cursor: pointer;
+}
+
 .item a
 {
     display:block;
@@ -127,3 +139,33 @@ footer
 footer section
 {
 }
+
+.hidden
+{
+    display: none;
+}
+
+#imgviewer
+{
+    width: 100%;
+    heigth: 100%;
+    margin: 10px auto 0 auto;
+    padding: 0;
+    //background: rgba(0,0,0,.6);
+}
+
+#imgviewer div
+{
+    heigth: 100%;
+    text-align: center;
+    display: block;
+}
+
+#imgviewer img
+{
+    width: auto;
+    height: auto;
+    max-height: 90%;
+    max-width: 100%;
+}
+

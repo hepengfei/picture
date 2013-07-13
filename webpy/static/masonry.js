@@ -5,7 +5,6 @@ var max_page=10;
 function get_cur_page(url){
     p = 0;
     var r=url.match(/^.*[&?]p=([0-9]+)/)
-    console.log("get_cur_page: "+r);
     if(r && r.length == 2)
     {
         p = Number(r[1])
@@ -59,6 +58,7 @@ $('#container').masonry('on', 'layoutComplete', function(msnry, items) {
 function load_pic(arr)
 {
     var container = $('#container');
+
     var n = arr.length;
     for(i=0; i<n; ++i)
     {
@@ -72,7 +72,7 @@ function load_pic(arr)
             .attr("height", Math.round(info.picwidth * picfixwidth / info.picheight) + "px");
 
         var a=document.createElement("a");
-        $(a).attr("href", "/pic/file/" + info.picid + "." + info.picformat.toLowerCase());
+        $(a).attr("href", "/view.html?p="+ start_page + "&id=" + info.picid + "." + info.picformat.toLowerCase());
 
         var title=document.createElement("p");
         $(title).html(info.picname);
@@ -116,7 +116,7 @@ $("#infinitescroll").infinitescroll({
     state: {
         currPage: cur_page - 1,
     },
-    debug: true,
+    debug: false,
     binder: $(window), // used to cache the selector for the element that will be scrolling
     nextSelector: "a#more:last",
     navSelector: "a#more:last",
@@ -150,7 +150,5 @@ function exejson(jsonurl)
     s.setAttribute("type", "text/javascript");
     document.head.appendChild(s);
 }
-
-
 
 
