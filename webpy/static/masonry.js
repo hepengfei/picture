@@ -1,11 +1,59 @@
-var picfixwidth=300
-var cur_page=1;
-var num_per_page=20;
-  
+var picfixwidth=236;
+var num_per_page=10;
+var max_page=10;
+
+function get_cur_page(url){
+    p = 0;
+    var r=url.match(/^.*[&?]p=([0-9]+)/)
+    console.log("get_cur_page: "+r);
+    if(r && r.length == 2)
+    {
+        p = Number(r[1])
+    }
+    if(p == 0)
+    {
+        p = 1;
+    }
+    return p;
+}
+
+var cur_page = get_cur_page(document.location.href);
+var start_page = cur_page;
+
+function update_page_nav()
+{
+    if(start_page < max_page)
+    {
+        $('a#prevpage').attr('href', '?p=1');
+    }
+    else
+    {
+        $('a#prevpage').attr('href', '?p='+(start_page - max_page));
+    }
+
+    $('a#nextpage').attr('href', '?p='+(start_page + max_page));
+    $('em#maxnum').text(max_page * num_per_page);
+}
+
+update_page_nav();
+
 $('#container').masonry({
     "gutter": 10,
-    isInitLayout: false,
-    "itemSelector": ".item"
+    "isInitLayout": false,
+    "itemSelector": ".item",
+    "isResizeBound": false,       // 自己触发
+});
+
+$(window).resize(function() {
+    $('#art').width('auto');    // 先设置宽度为auto
+    $('#container').masonry();  // 再让masonry重新布局
+});
+
+$('#container').masonry('on', 'layoutComplete', function(msnry, items) {
+    //masonry = $('#container').data('masonry');
+    masonry = msnry;
+    width = masonry.cols * masonry.columnWidth - masonry.gutter;
+    $('#art').width(width); // 布局完后设置宽度，使其居中
 });
 
 function load_pic(arr)
@@ -65,7 +113,10 @@ $("#infinitescroll").infinitescroll({
         selector: null,
         speed: 'fast',
     },
-    debug: false,
+    state: {
+        currPage: cur_page - 1,
+    },
+    debug: true,
     binder: $(window), // used to cache the selector for the element that will be scrolling
     nextSelector: "a#more:last",
     navSelector: "a#more:last",
@@ -74,19 +125,21 @@ $("#infinitescroll").infinitescroll({
     animate: false,
     bufferPx: 40,
     errorCallback: function () { },
-    prefill: function () {console.log('prefill'+cur_page);}, // When the document is smaller than the window, load data until the document is larger or links are exhausted
+    prefill: true, // When the document is smaller than the window, load data until the document is larger or links are exhausted
     maxPage:undefined, // to manually control maximum page (when maxPage is undefined, maximum page limitation is not work)
-
+    path: function(currpage) {
+        url = "/pic/info/list/" + (currpage-1)*num_per_page + "/" + num_per_page;
+        $("a#more:last").attr("href", url);
+        return url;
+    },
     dataType: 'json',
     appendCallback: false,
 }, function(json, opts) {
     load_pic(json);
-    if(cur_page == 0) {
-        cur_page = 1;
+    if(opts.state.currPage + 1 - start_page >= max_page)
+    {
+        $("#infinitescroll").infinitescroll("pause");
     }
-    nexturl="/pic/info/list/" + cur_page * num_per_page + "/" + num_per_page;
-    cur_page++;
-    $("a#more:last").attr('href',nexturl);
 });
 
 
@@ -99,16 +152,5 @@ function exejson(jsonurl)
 }
 
 
-function load_next_page()
-{
-    jsonurl="/pic/info/list/" + cur_page + "/" + num_per_page + "?callback=load_pic";
-    exejson(jsonurl);
-    cur_page += num_per_page;
-}
 
-function set_next_page()
-{
-    nexturl="/pic/info/list/" + cur_page + "/" + num_per_page;
-    $("a#more:last").attr('href',nexturl);
-}
 

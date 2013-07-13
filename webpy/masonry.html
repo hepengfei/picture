@@ -6,7 +6,7 @@
   <meta name="description" content="美女图片是一个图片采集、图片欣赏、图片分享的网站，拥有几十万张高清美图。">
   <meta name="author" content="sanmimu">
 
-  <link rel="stylesheet" href="/static/masonry.css">
+  <link rel="stylesheet" href="/static/masonry.css?v0.2">
 
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/static/masonry.pkgd.js"></script>
@@ -17,19 +17,40 @@
 <body>
 
 <header>
+  <nav>
+    <h1 class="title"><a href="/">美女图片</a></h1>
+
+    <div class="menu">
+      <a href="">热门美图</a>
+      <a href="">全部美图</a>
+    </div>
+  </nav>
 </header>
 
-<div id="container">
-  <!--div class="item"><a href=""><img src="" alt=""/></a></div-->
-</div>
+<article id="art">
+  <div id="container">
+    <!--div class="item"><a href=""><img src="" alt=""/></a></div-->
+  </div>
+</article>
 
 <footer>
   <nav id="infinitescroll">
-    <a id="more" href="/pic/info/list/0/20">加载更多</a>
+    <a id="more" href="/pic/info/list/20/20">加载更多</a>
   </nav>
+
+  <nav id="pagenav">
+    <a id="prevpage" href="?p=1">&lt;&lt;前一页</a>
+    <em>每页显示<em id="maxnum">100</em>张图片</em>
+    <a id="nextpage" href="?p=6">后一页&gt;&gt;</a>
+  </nav>
+
+  <section>
+    <p></p>
+    <em>Powered by Masonry+Infinitscroll+Webpy+Python+UWsgi+Nginx.</em>
+  </section>
 </footer>
 
-<script src="/static/masonry.js?v0.14"></script>
+<script src="/static/masonry.js?v0.17"></script>
 
 </body>
 </html>
