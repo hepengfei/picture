@@ -1,14 +1,14 @@
+# -*-mode: python; coding:utf-8-*-
 import os
 import sys
 
-using_sae=True
-#using_sae=False
+import const
 
-if using_sae:
+if const.using_sae:
     import sae
 
 app_root = os.path.dirname(__file__)
-sys.path.append(app_root)
+#sys.path.append(app_root) # already exists
 
 import web
 web.DEBUG=True
@@ -56,7 +56,7 @@ app = web.application(urls, globals(), autoreload=True)
 
 if __name__ == "__main__":      # for test
     app.run()
-elif using_sae:
+elif const.using_sae:
     application = sae.create_wsgi_app(app.wsgifunc())
 else:                           # for mod_wsgi(recommend you to use nginx+uwsgi)
     application = app.wsgifunc()

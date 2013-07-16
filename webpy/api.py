@@ -14,7 +14,7 @@ urls = (
     '/pic/info/list/([0-9]*)/([0-9]*)', 'api.PicInfoList',
 )
 
-def setpicid(ctx, id):
+def setetag(ctx, id):
     ctx.headers.append(('ETag', str(id)))
 
 def setcachecontrol(ctx, sec):
@@ -46,21 +46,22 @@ class PicFile:
         appkey, apppasswd = utils.getappinfo(web.ctx)
         data=web.data()
         id=utils.hashid(data)
-        setpicid(web.ctx, id)
+        setetag(web.ctx, id)
         ret, n_affected = model.picfile_new(id, data)
         if ret != 0:
             return web.internalerror("")
         elif n_affected == 1:
-            web.ctx.status="201"
+            web.ctx.status="201 Created"
         else:
-            web.ctx.status="200"
+            web.ctx.status="200 OK"
         return ''
     def GET(self, id):
         if len(id) < 32:
             return web.notfound("error id")
         appkey, apppasswd = utils.getappinfo(web.ctx)
+        # enable cacheing
         id = id[:32]
-        setpicid(web.ctx, id)
+        setetag(web.ctx, id)
         etag = web.ctx.env.get('HTTP_IF_NONE_MATCH')
         if etag == id:
             web.ctx.status="304 Not Modified"
@@ -82,7 +83,7 @@ class PicFile:
         if len(id) < 32:
             return web.notfound("error id")
         appkey, apppasswd = utils.getappinfo(web.ctx)
-        setpicid(web.ctx, id)
+        setetag(web.ctx, id)
         ret, n_affected=model.picfile_delete(id)
         if ret != 0:
             return web.internalerror("")
@@ -98,7 +99,7 @@ class PicInfo:
         appkey, apppasswd = utils.getappinfo(web.ctx)
         infostr=web.data()
         info=encode_dict_val(json.loads(str(infostr)), "utf-8")
-        setpicid(web.ctx, id)
+        setetag(web.ctx, id)
         tagid=utils.hashid(info["tagname"])
 
         taginfo={"tagname":info["tagname"], "picnumber":0}
@@ -112,16 +113,15 @@ class PicInfo:
         if ret != 0:
             return web.internalerror("")
         if n_affected == 1:
-            web.ctx.status="201"
+            web.ctx.status="201 Created"
         else:
-            web.ctx.status="200"
+            web.ctx.status="200 OK"
         return ""
     def GET(self, id):
         if len(id) != 32:
             return web.notfound("error id")
         appkey, apppasswd = utils.getappinfo(web.ctx)
-        setpicid(web.ctx, id)
-        setcachecontrol(web.ctx, 864000)
+        setetag(web.ctx, id)
         ret, info=model.picinfo_get(id)
         if ret != 0:
             return web.internalerror("")
@@ -145,7 +145,7 @@ class PicInfo:
         if len(id) != 32:
             return web.notfound("error id")
         appkey, apppasswd = utils.getappinfo(web.ctx)
-        setpicid(web.ctx, id)
+        setetag(web.ctx, id)
         ret, n_affected=model.picinfo_delete(id)
         if ret != 0:
             return web.internalerror("")
@@ -156,7 +156,6 @@ class PicInfo:
 class PicInfoList:
     def GET(self, offset, limit):
         appkey, apppasswd = utils.getappinfo(web.ctx)
-        setcachecontrol(web.ctx, 60)
         ret, results=model.picinfo_list_large(offset, limit)
         if ret != 0:
             return web.internalerror("")

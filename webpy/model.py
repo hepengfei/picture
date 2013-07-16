@@ -3,17 +3,17 @@
 import web, datetime
 import MySQLdb
 
-import sae.const
+import const
 
 db = web.database(dbn='mysql',
-                  host=sae.const.MYSQL_HOST,
-                  port=int(sae.const.MYSQL_PORT),
-                  db=sae.const.MYSQL_DB,
-                  user=sae.const.MYSQL_USER, 
-                  passwd=sae.const.MYSQL_PASS)
+                  host=const.MYSQL_HOST,
+                  port=int(const.MYSQL_PORT),
+                  db=const.MYSQL_DB,
+                  user=const.MYSQL_USER, 
+                  passwd=const.MYSQL_PASS)
 
 def get_errno(err):
-    print err
+    print "mysql error: " + err
     return int(str(err)[1:10].split(',')[0])
 
 def picfile_new(id, data):
