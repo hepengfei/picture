@@ -124,7 +124,7 @@ function fetchall()
 APPKEY="me"
 APPPASSWD="aa"
 
-SERVER="benben"
+SERVER="meinvjzy.sinaapp.com"
 
 function request()
 {
@@ -136,7 +136,7 @@ function request()
     then
         file="-T $file"
     fi
-    curl -v -X $method http://$SERVER/$path -H "X_APP: $APPKEY,$APPPASSWD" $file 2>&1
+    curl -s -v -X $method http://$SERVER/$path -H "X_APP: $APPKEY,$APPPASSWD" $file 2>&1
 }
 
 function get_result()
@@ -189,6 +189,11 @@ function report_file()
     fi
 
     return 0
+}
+
+function filter_retina_filename()
+{
+    gawk -F"/" '{print $NF}' | sed 's/-[0-9]*x[0-9]*//'
 }
 
 function filter_filename()

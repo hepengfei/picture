@@ -2,7 +2,7 @@
 APPKEY="me"
 APPPASSWD="aa"
 
-SERVER="benben"
+SERVER="meinvjzy.sinaapp.com"
 
 function request()
 {
@@ -14,7 +14,7 @@ function request()
     then
         file="-T $file"
     fi
-    curl -v -X $method http://$SERVER/$path -H "X_APP: $APPKEY,$APPPASSWD" $file 2>&1
+    curl -s -v -X $method http://$SERVER/$path -H "X_APP: $APPKEY,$APPPASSWD" $file 2>&1
 }
 
 function assert_result()

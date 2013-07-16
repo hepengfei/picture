@@ -1,11 +1,11 @@
-worker:wsgi
-libraries:
-- name: webpy
-  version: "0.36"
-handlers:
-- url: /static/
-  static_path: static
-- url: /robots.txt
-  static_path: robots.txt
-- url: /favicon.ico
-  static_path: favicon.ico
+name: meinvjzy
+version: 1
+worker: wsgi
+handle:
+- directoryindex: index.html
+- rewrite: if ( path ~ "/view.html" ) goto "/static/view.html"
+- rewrite: if ( path ~ "/index.html" ) goto "/static/index.html"
+- rewrite: if ( path ~ "/" ) goto "/static/index.html"
+- compress:  if ( out_header["Content-type"] ~ "image/jpeg" ) compress
+- compress:  if ( out_header["Content-type"] ~ "image/png" ) compress
+- compress:  if ( out_header["Content-type"] ~ "image/gif" ) compress

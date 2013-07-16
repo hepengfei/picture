@@ -5,6 +5,7 @@ import model
 import utils
 import json
 import cStringIO
+import datetime
 
 urls = (
     '/pic/file/new', 'api.PicFile',
@@ -15,6 +16,15 @@ urls = (
 
 def setpicid(ctx, id):
     ctx.headers.append(('ETag', str(id)))
+
+def setcachecontrol(ctx, sec):
+    n = datetime.datetime.now()
+    e = n + datetime.timedelta(days=30)
+    ctx.headers.append(('Date',
+                        n.strftime("%a, %d %b %Y %H:%M:%S GMT")))
+    ctx.headers.append(('Expires',
+                        e.strftime("%a, %d %b %Y %H:%M:%S GMT")))
+    ctx.headers.append(('Cache-Control', 'public'))
 
 def encode_dict_val(d, coding='utf-8'):
     for k in d.keys():
@@ -51,6 +61,11 @@ class PicFile:
         appkey, apppasswd = utils.getappinfo(web.ctx)
         id = id[:32]
         setpicid(web.ctx, id)
+        etag = web.ctx.env.get('HTTP_IF_NONE_MATCH')
+        if etag == id:
+            web.ctx.status="304 Not Modified"
+            return ''
+
         ret, data=model.picfile_get(id)
         if ret == 0:
             if data is None:
@@ -59,7 +74,7 @@ class PicFile:
             if ret == 0 and picinfo is not None:
                 web.ctx.headers.append(
                     ('Content-Type',
-                     'image/'+ str.lower(picinfo.picformat)))
+                     'image/'+ str.lower(str(picinfo.picformat))))
             return data
         else:
             return web.internalerror("")
@@ -106,6 +121,7 @@ class PicInfo:
             return web.notfound("error id")
         appkey, apppasswd = utils.getappinfo(web.ctx)
         setpicid(web.ctx, id)
+        setcachecontrol(web.ctx, 864000)
         ret, info=model.picinfo_get(id)
         if ret != 0:
             return web.internalerror("")
@@ -140,6 +156,7 @@ class PicInfo:
 class PicInfoList:
     def GET(self, offset, limit):
         appkey, apppasswd = utils.getappinfo(web.ctx)
+        setcachecontrol(web.ctx, 60)
         ret, results=model.picinfo_list_large(offset, limit)
         if ret != 0:
             return web.internalerror("")
@@ -160,7 +177,7 @@ class PicInfoList:
                 return web.internalerror("")
 
             info.tagname = tag.tagname
-            json.dump(info, io, ensure_ascii=False)
+            json.dump(encode_dict_val(info), io, ensure_ascii=False)
             io.write(",\n")
 
         out = io.getvalue()

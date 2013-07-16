@@ -3,10 +3,17 @@
 import web, datetime
 import MySQLdb
 
-db = web.database(dbn='mysql', host='localhost',
-                  db='picture', user='root', passwd='')
+import sae.const
+
+db = web.database(dbn='mysql',
+                  host=sae.const.MYSQL_HOST,
+                  port=int(sae.const.MYSQL_PORT),
+                  db=sae.const.MYSQL_DB,
+                  user=sae.const.MYSQL_USER, 
+                  passwd=sae.const.MYSQL_PASS)
 
 def get_errno(err):
+    print err
     return int(str(err)[1:10].split(',')[0])
 
 def picfile_new(id, data):
@@ -79,7 +86,7 @@ def picinfo_list(offset, limit):
 def picinfo_list_large(offset, limit):
     try:
         results = db.select('picinfo', offset=offset, limit=limit,
-                            where="picheight>400")
+                            where="picheight>400", order="picid")
     except MySQLdb.Error as err:
         return get_errno(err), None
     if len(results) > 0:
