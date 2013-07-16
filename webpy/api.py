@@ -6,6 +6,7 @@ import utils
 import json
 import cStringIO
 import datetime
+import const
 
 urls = (
     '/pic/file/new', 'api.PicFile',
@@ -139,6 +140,7 @@ class PicInfo:
         info.tagname = tag.tagname
         del info['bywho']
         info["datesubmit"]=str(info["datesubmit"])
+        setcachecontrol(web.ctx, const.CACHE_PICINFO)
         return json.dumps(encode_dict_val(info, "utf-8"), ensure_ascii=False)
 
     def DELETE(self, id):
@@ -184,6 +186,7 @@ class PicInfoList:
         input = web.input(callback=None)
         if input.callback is not None:
             outdata = "%s(%s)" % (str(input.callback), outdata)
+        setcachecontrol(web.ctx, const.CACHE_PICINFOLIST)
         return outdata
 
 #    def GET(self, idlist):
