@@ -13,6 +13,7 @@ urls = (
     '/pic/file/([0-9a-zA-Z.]*)', 'api.PicFile',
     '/pic/info/([0-9a-zA-Z]*)', 'api.PicInfo',
     '/pic/info/list/([0-9]*)/([0-9]*)', 'api.PicInfoList',
+    '/pic/info/series/([0-9a-zA-Z]*)', 'api.PicInfoSeries',
 )
 
 def setetag(ctx, id):
@@ -159,6 +160,51 @@ class PicInfoList:
     def GET(self, offset, limit):
         appkey, apppasswd = utils.getappinfo(web.ctx)
         ret, results=model.picinfo_list_large(offset, limit)
+        if ret != 0:
+            return web.internalerror("")
+
+        if results is None:
+            return web.notfound("")
+
+        io = cStringIO.StringIO()
+        io.write("[\n")
+        for info in results:
+            del info['bywho']
+            info["datesubmit"]=str(info["datesubmit"])
+            ret, tag=model.tag_get(info.tagid)
+            if ret != 0:
+                return web.internalerror("")
+
+            if tag is None:         # 不应该出现的情况!
+                return web.internalerror("")
+
+            info.tagname = tag.tagname
+            json.dump(encode_dict_val(info), io, ensure_ascii=False)
+            io.write(",\n")
+
+        out = io.getvalue()
+        outdata = out[:-2] + '\n]'
+        input = web.input(callback=None)
+        if input.callback is not None:
+            outdata = "%s(%s)" % (str(input.callback), outdata)
+        setcachecontrol(web.ctx, const.CACHE_PICINFOLIST)
+        return outdata
+
+class PicInfoSeries:
+    def GET(self, id):
+        print id
+        if len(id) < 32:
+            return web.notfound("error id")
+        id = id[:32]
+        appkey, apppasswd = utils.getappinfo(web.ctx)
+        ret, info=model.picinfo_get(id)
+        if ret != 0:
+            return web.internalerror("")
+
+        if info is None:
+            return web.notfound("")
+
+        ret, results = model.picinfo_series(info.picname)
         if ret != 0:
             return web.internalerror("")
 

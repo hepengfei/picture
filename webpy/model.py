@@ -86,7 +86,24 @@ def picinfo_list(offset, limit):
 def picinfo_list_large(offset, limit):
     try:
         results = db.select('picinfo', offset=offset, limit=limit,
-                            where="picheight>400", order="picid")
+                            where="picheight>300", order="picid")
+    except MySQLdb.Error as err:
+        return get_errno(err), None
+    if len(results) > 0:
+        return 0, results
+    else:
+        return 0, None
+
+def picinfo_series(picname):
+    if len(picname) < 10:
+        return 0, None
+    picname=picname.decode('utf-8')[:-5]        # 简化：认为最多后面5个字符是后缀
+    try:
+        results = db.select('picinfo',
+                            where="picheight>100 and left(picname,"+str(len(picname))+")=$picname",
+                            order="picname",
+                            vars=locals()
+                        )
     except MySQLdb.Error as err:
         return get_errno(err), None
     if len(results) > 0:

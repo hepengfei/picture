@@ -32,7 +32,7 @@ if(pic == false)
 }
 else
 {
-    imgurl = "/pic/file/" + pic;
+    var imgurl = "/pic/file/" + pic;
     var img=document.createElement("img");
     $(img).attr("src", imgurl);
 
@@ -49,5 +49,47 @@ else
     $("#imgviewer>div").append(a);
     $("#prevpage").attr('href', "/"+page_str);
 }
+
+
+url = "/pic/info/series/" + pic.substr(0,32) + "?callback=loadseries"
+
+function exejson(jsonurl)
+{
+    s=document.createElement("script");
+    s.setAttribute("src", jsonurl);
+    s.setAttribute("type", "text/javascript");
+    document.head.appendChild(s);
+}
+
+function loadseries(data)
+{
+    var n=data.length;
+    for(i=0;i<n;++i)
+    {
+        if(data[i]["picid"] == pic.substr(0,32))
+            continue;
+
+        var imgurl = "/pic/file/" + data[i]["picid"]  + "." + data[i].picformat.toLowerCase();
+        var img=document.createElement("img");
+        $(img).attr("src", imgurl)
+        .attr("alt", data[i]["picname"]);
+        
+        var a=document.createElement("a");
+        $(a).attr("href", "/"+page_str)
+            .append(img);
+        
+        var div=document.createElement("div");
+        $(div).append(a);
+
+        var art=document.createElement("article");
+        $(art).attr("id", "imgviewer")
+            .append(div);
+
+        $("#imgviewer:last").after(art);
+    }
+
+}
+
+exejson(url)
 
 

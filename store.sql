@@ -19,7 +19,7 @@ create table picinfo
     datesubmit datetime not null,
 
     primary key (picid)
-) character set = utf8 collate = utf8_bin;
+) ENGINE=MYISAM character set = utf8 collate = utf8_bin;
 
 create table picfile
 (
@@ -27,7 +27,7 @@ create table picfile
     picdata mediumblob not null,
 
     primary key (picid)
-)character set = utf8 collate = utf8_bin;
+) ENGINE=MYISAM character set = utf8 collate = utf8_bin;
 
 
 create table tag
@@ -37,7 +37,7 @@ create table tag
     picnumber bigint unsigned not null default 0,
 
     primary key (tagid)
-)character set = utf8 collate = utf8_bin;
+) ENGINE=MYISAM character set = utf8 collate = utf8_bin;
 
 
 create table app
@@ -48,7 +48,7 @@ create table app
     appdesc text not null,
 
     primary key (appkey)
-)character set = utf8 collate = utf8_bin;
+) ENGINE=MYISAM character set = utf8 collate = utf8_bin;
 
 create table picexif
 (
@@ -56,6 +56,6 @@ create table picexif
     picexif text not null,
 
     primary key (picid)
-)character set = utf8 collate = utf8_bin;
+) ENGINE=MYISAM character set = utf8 collate = utf8_bin;
 
 
