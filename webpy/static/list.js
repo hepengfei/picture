@@ -1,6 +1,6 @@
 var picfixwidth=236;
 var num_per_page=10;
-var max_page=3;
+var max_page=10;
 
 function get_cur_page(url){
     p = 0;

@@ -212,7 +212,7 @@ function report_from_localcache()
         tagname=`basename $infofile | cut -d'-' -f3`
         picname=`cat $infofile | filter_title`
 
-        mainpic=`head -1 $infofile | filter_filename`
+        mainpic=`head -1 $infofile | filter_retina_filename`
 
         nline=0
         if [ -f $infofile ]; then
@@ -235,7 +235,7 @@ function report_from_localcache()
         tail -n +3 $infofile | while read line;
         do
             n=$((n+1))
-            picfile=`echo $line | filter_filename`
+            picfile=`echo $line | filter_retina_filename`
             
             report_file $cache_dir/$picfile $tagname "$picname-$n"
             if [ $? -ne 0 ]; then

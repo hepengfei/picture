@@ -4,7 +4,7 @@ using_sae=False
 
 MYSQL_HOST = "localhost"
 MYSQL_PORT = "3306"
-MYSQL_DB = "picture1"
+MYSQL_DB = "picture3"
 MYSQL_USER = "root"
 MYSQL_PASS = ""
 
