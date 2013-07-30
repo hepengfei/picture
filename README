@@ -54,6 +54,12 @@ Picture
    - [ ] 可抓取内容
      1. weibo外链:http://photo.weibo.com/welcome/hot
 
+* 部署到sinaapp的步骤
+1. 将webpy目录拷贝为sinaapp源码的数字目录
+2. 修改const.py配置，将using_sae=False注释掉
+3. 提交代码
+4. 上传图片数据
+
 * API接口
 ** 新增
 - 文件： POST /pic/file/new

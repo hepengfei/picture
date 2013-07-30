@@ -13,7 +13,7 @@ db = web.database(dbn='mysql',
                   passwd=const.MYSQL_PASS)
 
 def get_errno(err):
-    print "mysql error: " + err
+    print "mysql error: " + str(err)
     return int(str(err)[1:10].split(',')[0])
 
 def picfile_new(id, data):
